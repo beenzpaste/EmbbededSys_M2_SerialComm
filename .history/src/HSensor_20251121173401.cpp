@@ -1,5 +1,3 @@
-// File has been named with cpp extension instead of c for proper build
-
 #include <Arduino.h>
 #include <Wire.h>
 #include "HSensor.h"
@@ -7,7 +5,6 @@
 static int statusByte = 0; // store latest status byte
 static long rawPressureData = 0; // store latest pressure data
 
-// FROM DATASHEET:
 // To read out a compensated pressure reading, the Master generates a START condition and sends the Sensor address followed by a
 // read bit (1). After the Sensor generates an acknowledge, it will transmit up to 4 bytes of data. The first data byte is the Status Byte
 // (8-bit) and the second to fourth bytes are the compensated pressure output (24-bit). The Master must acknowledge the receipt of
