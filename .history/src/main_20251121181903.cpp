@@ -37,48 +37,44 @@ void setup() {
 
 void loop() {
   
-  if (sensorReady) {
-    sensorReady = false; // clear flag
+  if (UpdateSensor() != 0) {
+    Serial.println("NOT VALID: Sensor Transmission Error");
+    delay(1000);
+    return;
+  }
   
-    if (UpdateSensor() != 0) {
-      Serial.println("NOT VALID: Sensor Transmission Error");
-      delay(1000);
-      return;
-    }
-    
-    int powerStatus = GetPowerStatus();
-    int busyStatus = GetBusy();
-    int memStatus = GetMemStat();
-    int mathStatus = GetMathSat();
+  int powerStatus = GetPowerStatus();
+  int busyStatus = GetBusy();
+  int memStatus = GetMemStat();
+  int mathStatus = GetMathSat();
 
-    // For all conditions met, read and output pressure data
-    if (powerStatus && !busyStatus && !memStatus && !mathStatus) {
+  // For all conditions met, read and output pressure data
+  if (powerStatus && !busyStatus && !memStatus && !mathStatus) {
 
-      long rawPressure = GetPressureDataRaw();
-      int pressure_mmHg = GetPressureData();
+    long rawPressure = GetPressureDataRaw();
+    int pressure_mmHg = GetPressureData();
 
-      Serial.print("Raw Pressure: ");
-      Serial.print(rawPressure);
-      Serial.println();
-      Serial.print("Pressure (mmHg): ");
-      Serial.println(pressure_mmHg);
+    Serial.print("Raw Pressure: ");
+    Serial.print(rawPressure);
+    Serial.println();
+    Serial.print("Pressure (mmHg): ");
+    Serial.println(pressure_mmHg);
 
-    } 
+  } 
 
-    // In case of conditions not met, output NOT VALID with corresponding reason(s)
-    else {
+  // In case of conditions not met, output NOT VALID with corresponding reason(s)
+  else {
 
-      Serial.print("NOT VALID: ");
+    Serial.print("NOT VALID: ");
 
-      if (!powerStatus) Serial.print(" Power Error ");
-      if (busyStatus) Serial.print(" Sensor Busy ");
-      if (memStatus) Serial.print(" Memory Error "); 
-      if (mathStatus) Serial.print(" Math Saturated ");
+    if (!powerStatus) Serial.print(" Power Error ");
+    if (busyStatus) Serial.print(" Sensor Busy ");
+    if (memStatus) Serial.print(" Memory Error "); 
+    if (mathStatus) Serial.print(" Math Saturated ");
 
-      Serial.println();
-
-    }
+    Serial.println();
 
   }
+  delay(1000); // wait 1 second between readings
 
 }
